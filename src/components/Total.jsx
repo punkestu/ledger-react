@@ -23,6 +23,13 @@ export default function Total({ listWallet }) {
     });
   }
 
+  function format(value) {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(value);
+  }
+
   return (
     <div className="flex flex-col gap-4 p-4 border drop-shadow-sm rounded-md">
       <div className="flex justify-between items-center">
@@ -70,18 +77,23 @@ export default function Total({ listWallet }) {
         </button>
       </div>
       <p className="text-xl">
-        <strong>Total:</strong> Rp.{" "}
-        {totals.reduce((acc, total) => acc + parseInt(total[5] || 0), 0)}
+        <strong>Total: </strong>
+        {format(
+          totals.reduce((acc, total) => acc + parseInt(total[5] || 0), 0)
+        )}
       </p>
       <ul className="flex flex-wrap gap-2 overflow-x-auto max-h-[50vh]">
         {totals.map((total, index) =>
           total[5] ? (
-            <li key={index} className="flex-grow flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <li
+              key={index}
+              className="flex-grow flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            >
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 {listWallet[index].properties.title}
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
-                Rp. {total[5]}
+                {format(total[5])}
               </p>
             </li>
           ) : (
