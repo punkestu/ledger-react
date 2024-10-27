@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { GetLastTotal } from "../lib/Sheet";
-import { Button } from "flowbite-react";
 
 export default function Total({ listWallet }) {
   const [totals, setTotals] = useState([]);
@@ -26,9 +25,12 @@ export default function Total({ listWallet }) {
 
   return (
     <div className="flex flex-col gap-4 p-4 border drop-shadow-sm rounded-md">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Saldo Wallet</h1>
-        <Button color="blue" onClick={refresh}>
+        <button
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-2 flex justify-center"
+          onClick={refresh}
+        >
           {isRefreshing ? (
             <svg
               aria-hidden="true"
@@ -65,21 +67,22 @@ export default function Total({ listWallet }) {
               />
             </svg>
           )}
-        </Button>
+        </button>
       </div>
       <p className="text-xl">
-        <strong>Total:</strong> Rp.
+        <strong>Total:</strong> Rp.{" "}
         {totals.reduce((acc, total) => acc + parseInt(total[5] || 0), 0)}
       </p>
-      <ul className="flex flex-wrap shrink-0 gap-2 overflow-x-auto">
+      <ul className="flex flex-wrap gap-2 overflow-x-auto max-h-[50vh]">
         {totals.map((total, index) =>
           total[5] ? (
-            <li
-              key={index}
-              className="flex-grow flex flex-col items-center justify-center border px-4 py-2 w-auto"
-            >
-              <strong>{listWallet[index].properties.title}</strong>
-              <p className="text-xl">Rp. {total[5]}</p>
+            <li key={index} className="flex-grow flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {listWallet[index].properties.title}
+              </h5>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Rp. {total[5]}
+              </p>
             </li>
           ) : (
             ""
