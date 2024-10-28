@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { GetLastTotal } from "../lib/Sheet";
+import { subscribe } from "../lib/Queue";
 
 export default function Total({ listWallet }) {
   const [totals, setTotals] = useState([]);
@@ -9,6 +10,12 @@ export default function Total({ listWallet }) {
       refresh();
     }
   }, [listWallet]);
+
+  subscribe((event) => {
+    if (event === "update") {
+      refresh();
+    }
+  });
 
   function refresh() {
     setIsRefreshing(true);
@@ -83,8 +90,9 @@ export default function Total({ listWallet }) {
         )}
       </p>
       <ul className="flex flex-wrap gap-2 overflow-x-auto max-h-[50vh]">
-        {totals.map((total, index) =>
-          total[5] ? (
+        {totals
+          .filter((total) => total[5] && total[5] > 0)
+          .map((total, index) => (
             <li
               key={index}
               className="flex-grow flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
@@ -96,10 +104,7 @@ export default function Total({ listWallet }) {
                 {format(total[5])}
               </p>
             </li>
-          ) : (
-            ""
-          )
-        )}
+          ))}
       </ul>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Success from "./Success";
 import { TransferBalance } from "../lib/Sheet";
 import { initDropdowns } from "flowbite";
+import { pushEvent } from "../lib/Queue";
 
 export default function Transfer({ listWallet }) {
   initDropdowns();
@@ -34,6 +35,7 @@ export default function Transfer({ listWallet }) {
 
       setShowModal(true);
       setIsMutating(false);
+      pushEvent("update");
     });
   }
 

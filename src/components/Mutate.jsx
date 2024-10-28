@@ -2,6 +2,7 @@ import { useState } from "react";
 import Success from "./Success";
 import { MutateWallet } from "../lib/Sheet";
 import { initDropdowns } from "flowbite";
+import { pushEvent } from "../lib/Queue";
 
 export default function Mutate({ listWallet }) {
   initDropdowns();
@@ -32,6 +33,7 @@ export default function Mutate({ listWallet }) {
 
       setShowModal(true);
       setIsMutating(false);
+      pushEvent("update");
     });
   }
 
