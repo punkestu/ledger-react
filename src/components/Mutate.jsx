@@ -25,7 +25,7 @@ export default function Mutate({ listWallet }) {
     }
     setIsMutating(true);
     MutateWallet({ wallet, kredit, debit, keterangan }).then(() => {
-      setWallet(null);
+      // setWallet(null);
       setKredit(null);
       setDebit(null);
       setKeterangan("");

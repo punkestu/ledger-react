@@ -27,8 +27,8 @@ export default function Transfer({ listWallet }) {
     }
     setIsMutating(true);
     TransferBalance({ from, to, nominal, admin }).then(() => {
-      setFrom(null);
-      setTo(null);
+      // setFrom(null);
+      // setTo(null);
       setNominal(null);
       setAdmin(null);
 
