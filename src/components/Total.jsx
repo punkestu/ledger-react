@@ -24,10 +24,13 @@ export default function Total({ listWallet }) {
         const lastTotal = await GetLastTotal(wallet.properties.title);
         return lastTotal;
       })
-    ).then((totals) => {
-      setTotals(totals);
-      setIsRefreshing(false);
-    });
+    )
+      .then((totals) => {
+        setTotals(totals);
+      })
+      .finally(() => {
+        setIsRefreshing(false);
+      });
   }
 
   function format(value) {
