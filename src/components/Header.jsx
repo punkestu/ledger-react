@@ -1,8 +1,9 @@
-import { initPopovers } from "flowbite";
+import { initDrawers, initPopovers } from "flowbite";
 import { Auth, SignOut } from "../lib/Init";
 
 export default function Header({ isSignedIn }) {
-  initPopovers();
+  // initPopovers();
+  initDrawers();
   const handleAuthClick = () => {
     Auth()
       .then(() => {
