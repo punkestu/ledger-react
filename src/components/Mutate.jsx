@@ -23,16 +23,22 @@ export default function Mutate({ listWallet }) {
       return;
     }
     setIsMutating(true);
-    MutateWallet({ wallet, kredit, debit, keterangan }).then(() => {
-      // setWallet(null);
-      setKredit(null);
-      setDebit(null);
-      setKeterangan("");
+    MutateWallet({ wallet, kredit, debit, keterangan })
+      .then(() => {
+        pushEvent("update");
+        pushEvent("success");
+      })
+      .catch(() => {
+        pushEvent("error");
+      })
+      .finally(() => {
+        // setWallet(null);
+        setKredit(null);
+        setDebit(null);
+        setKeterangan("");
 
-      setIsMutating(false);
-      pushEvent("update");
-      pushEvent("success");
-    });
+        setIsMutating(false);
+      });
   }
 
   return (
@@ -78,7 +84,7 @@ export default function Mutate({ listWallet }) {
                   <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg
                       className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                     aria-hidden="true"
+                      aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 20 20"
@@ -148,7 +154,7 @@ export default function Mutate({ listWallet }) {
               <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
                 <svg
                   className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                 aria-hidden="true"
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 20 16"
@@ -184,7 +190,7 @@ export default function Mutate({ listWallet }) {
               <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
                 <svg
                   className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                 aria-hidden="true"
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 20 16"
@@ -232,7 +238,7 @@ export default function Mutate({ listWallet }) {
         >
           {isMutating ? (
             <svg
-             aria-hidden="true"
+              aria-hidden="true"
               className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
               viewBox="0 0 100 101"
               fill="none"

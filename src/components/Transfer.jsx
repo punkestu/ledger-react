@@ -25,16 +25,22 @@ export default function Transfer({ listWallet }) {
       return;
     }
     setIsMutating(true);
-    TransferBalance({ from, to, nominal, admin: admin || 0 }).then(() => {
-      // setFrom(null);
-      // setTo(null);
-      setNominal(null);
-      setAdmin(null);
+    TransferBalance({ from, to, nominal, admin: admin || 0 })
+      .then(() => {
+        pushEvent("update");
+        pushEvent("success");
+      })
+      .catch(() => {
+        pushEvent("error");
+      })
+      .finally(() => {
+        // setFrom(null);
+        // setTo(null);
+        setNominal(null);
+        setAdmin(null);
 
-      setIsMutating(false);
-      pushEvent("update");
-      pushEvent("success");
-    });
+        setIsMutating(false);
+      });
   }
 
   return (
@@ -55,7 +61,7 @@ export default function Transfer({ listWallet }) {
               {from ? from.title : "Dari"}
               <svg
                 className="w-2.5 h-2.5 ms-3"
-               aria-hidden="true"
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 10 6"
@@ -81,7 +87,7 @@ export default function Transfer({ listWallet }) {
                   <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg
                       className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                     aria-hidden="true"
+                      aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 20 20"
@@ -150,7 +156,7 @@ export default function Transfer({ listWallet }) {
               {to ? to.title : "Ke"}
               <svg
                 className="w-2.5 h-2.5 ms-3"
-               aria-hidden="true"
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 10 6"
@@ -176,7 +182,7 @@ export default function Transfer({ listWallet }) {
                   <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg
                       className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                     aria-hidden="true"
+                      aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 20 20"
@@ -245,7 +251,7 @@ export default function Transfer({ listWallet }) {
             <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
-               aria-hidden="true"
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 20 16"
@@ -281,7 +287,7 @@ export default function Transfer({ listWallet }) {
             <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
-               aria-hidden="true"
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 20 16"
@@ -312,7 +318,7 @@ export default function Transfer({ listWallet }) {
         >
           {isMutating ? (
             <svg
-             aria-hidden="true"
+              aria-hidden="true"
               className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
               viewBox="0 0 100 101"
               fill="none"

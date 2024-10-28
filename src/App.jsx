@@ -10,6 +10,7 @@ import Total from "./components/Total";
 import { CreateWallet } from "./components/CreateWallet";
 import Success from "./components/Success";
 import { subscribe } from "./lib/Queue";
+import Error from "./components/Error";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -49,6 +50,7 @@ const App = () => {
         {isSignedIn ? (
           <>
             <Success />
+            <Error />
             <LoadingScreen loaded={isSheetReady && isAppReady} />
             <Mutate listWallet={listWallet} />
             <Transfer listWallet={listWallet} />

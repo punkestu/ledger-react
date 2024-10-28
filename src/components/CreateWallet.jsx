@@ -12,11 +12,18 @@ export function CreateWallet() {
       return;
     }
     setIsMutating(true);
-    const wallet = await CreateSheet(walletName);
-    setIsMutating(false);
-    setWalletName("");
-    pushEvent("success", { msg: "wallet created", wallet });
-    pushEvent("wallet-created");
+    CreateSheet(walletName)
+      .then((wallet) => {
+        pushEvent("success", { msg: "wallet created", wallet });
+        pushEvent("wallet-created");
+      })
+      .catch(() => {
+        pushEvent("error");
+      })
+      .finally(() => {
+        setIsMutating(false);
+        setWalletName("");
+      });
   };
 
   return (

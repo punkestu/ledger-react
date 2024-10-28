@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { GetLastTotal } from "../lib/Sheet";
-import { subscribe } from "../lib/Queue";
+import { pushEvent, subscribe } from "../lib/Queue";
 
 export default function Total({ listWallet }) {
   const [totals, setTotals] = useState([]);
@@ -27,6 +27,9 @@ export default function Total({ listWallet }) {
     )
       .then((totals) => {
         setTotals(totals);
+      })
+      .catch(() => {
+        pushEvent("error");
       })
       .finally(() => {
         setIsRefreshing(false);
