@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GetLastTotal } from "../lib/Sheet";
+import { GetAllLastTotal, GetLastTotal } from "../lib/Sheet";
 import { pushEvent, subscribe } from "../lib/Queue";
 
 export default function Total({ listWallet }) {
@@ -19,12 +19,7 @@ export default function Total({ listWallet }) {
 
   function refresh() {
     setIsRefreshing(true);
-    Promise.all(
-      listWallet.map(async (wallet) => {
-        const lastTotal = await GetLastTotal(wallet.properties.title);
-        return lastTotal;
-      })
-    )
+    GetAllLastTotal()
       .then((totals) => {
         setTotals(totals);
       })
@@ -96,39 +91,39 @@ export default function Total({ listWallet }) {
       <p className="text-xl">
         <strong>Total: </strong>
         {format(
-          totals.reduce((acc, total) => acc + (parseInt(total[5] || 0) || 0), 0)
+          totals.reduce((acc, total) => acc + (parseInt(total.values[5] || 0) || 0), 0)
         )}
       </p>
       <ul className="flex flex-wrap gap-2 overflow-x-auto max-h-[50vh]">
         {totals.map(
           (total, index) =>
-            total[5] &&
-            total[5] > 0 && (
+            total.values[5] &&
+            total.values[5] > 0 && (
               <li
                 key={index}
                 className={`flex-grow flex flex-col items-center p-6 ${isBlock(
-                  listWallet[index].properties.title,
+                  total.wallet.properties.title,
                   "bg-red-500",
                   "bg-white hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                 )} border border-gray-200 rounded-lg shadow`}
               >
                 <h5
                   className={`mb-2 text-2xl font-bold tracking-tight ${isBlock(
-                    listWallet[index].properties.title,
+                    total.wallet.properties.title,
                     "text-white dark:text-gray-900",
                     "text-gray-900 dark:text-white"
                   )}`}
                 >
-                  {listWallet[index].properties.title}
+                  {total.wallet.properties.title}
                 </h5>
                 <p
                   className={`font-normal ${isBlock(
-                    listWallet[index].properties.title,
+                    total.wallet.properties.title,
                     "text-white dark:text-gray-900",
                     "text-gray-700 dark:text-gray-400"
                   )}`}
                 >
-                  {format(total[5])}
+                  {format(total.values[5])}
                 </p>
               </li>
             )

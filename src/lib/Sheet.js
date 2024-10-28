@@ -59,8 +59,7 @@ export async function TransferBalance({ from, to, nominal, admin }) {
   });
 
   const toLastTotal = await GetLastTotal(to.title);
-  const toTotal =
-    (parseInt(toLastTotal[5]) || 0) + parseInt(nominal);
+  const toTotal = (parseInt(toLastTotal[5]) || 0) + parseInt(nominal);
   const toResponse = await gapi.client.sheets.spreadsheets.values.append({
     spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
     range: to.title,
@@ -90,6 +89,20 @@ export async function GetLastTotal(title) {
   const values = response.result.values;
   if (!values) return 0;
   return values[values.length - 1];
+}
+
+export async function GetAllLastTotal() {
+  const wallets = await ListWallet();
+  const ranges = wallets.map((wallet) => wallet.properties.title + "!A:Z");
+  const response = await gapi.client.sheets.spreadsheets.values.batchGet({
+    spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
+    ranges: ranges,
+  });
+  return response.result.valueRanges.map((valueRange, index) => {
+    const values = valueRange.values;
+    if (!values) return 0;
+    return { wallet: wallets[index], values: values[values.length - 1] };
+  });
 }
 
 export async function CreateSheet(title) {
