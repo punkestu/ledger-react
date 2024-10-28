@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Success from "./Success";
 import { MutateWallet } from "../lib/Sheet";
 import { initDropdowns } from "flowbite";
 import { pushEvent } from "../lib/Queue";
@@ -11,7 +10,6 @@ export default function Mutate({ listWallet }) {
   const [debit, setDebit] = useState(null);
   const [keterangan, setKeterangan] = useState("");
 
-  const [showModal, setShowModal] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -31,15 +29,14 @@ export default function Mutate({ listWallet }) {
       setDebit(null);
       setKeterangan("");
 
-      setShowModal(true);
       setIsMutating(false);
       pushEvent("update");
+      pushEvent("success");
     });
   }
 
   return (
     <>
-      <Success show={[showModal, setShowModal]} />
       <div className="flex flex-col gap-4 p-4 border drop-shadow-sm rounded-md">
         <div className="flex xs:flex-row flex-col justify-between w-full">
           <h1 className="text-2xl font-bold">Mutasi Baru</h1>

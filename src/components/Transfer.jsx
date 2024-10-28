@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Success from "./Success";
 import { TransferBalance } from "../lib/Sheet";
 import { initDropdowns } from "flowbite";
 import { pushEvent } from "../lib/Queue";
@@ -11,7 +10,6 @@ export default function Transfer({ listWallet }) {
   const [nominal, setNominal] = useState("");
   const [admin, setAdmin] = useState("");
 
-  const [showModal, setShowModal] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
 
   const [searchFrom, setSearchFrom] = useState("");
@@ -27,21 +25,20 @@ export default function Transfer({ listWallet }) {
       return;
     }
     setIsMutating(true);
-    TransferBalance({ from, to, nominal, admin }).then(() => {
+    TransferBalance({ from, to, nominal, admin: admin || 0 }).then(() => {
       // setFrom(null);
       // setTo(null);
       setNominal(null);
       setAdmin(null);
 
-      setShowModal(true);
       setIsMutating(false);
       pushEvent("update");
+      pushEvent("success");
     });
   }
 
   return (
     <>
-      <Success show={[showModal, setShowModal]} />
       <div className="flex flex-col gap-4 p-4 border drop-shadow-sm rounded-md">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold">Transfer Wallet</h1>

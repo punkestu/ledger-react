@@ -37,6 +37,10 @@ export default function Total({ listWallet }) {
     }).format(value);
   }
 
+  function isBlock(wallet, yes, no) {
+    return wallet.includes("-block") ? yes : no;
+  }
+
   return (
     <div className="flex flex-col gap-4 p-4 border drop-shadow-sm rounded-md">
       <div className="flex justify-between items-center">
@@ -86,25 +90,43 @@ export default function Total({ listWallet }) {
       <p className="text-xl">
         <strong>Total: </strong>
         {format(
-          totals.reduce((acc, total) => acc + parseInt(total[5] || 0), 0)
+          totals.reduce((acc, total) => acc + (parseInt(total[5] || 0) || 0), 0)
         )}
       </p>
       <ul className="flex flex-wrap gap-2 overflow-x-auto max-h-[50vh]">
-        {totals
-          .filter((total) => total[5] && total[5] > 0)
-          .map((total, index) => (
-            <li
-              key={index}
-              className="flex-grow flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-            >
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {listWallet[index].properties.title}
-              </h5>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                {format(total[5])}
-              </p>
-            </li>
-          ))}
+        {totals.map(
+          (total, index) =>
+            total[5] &&
+            total[5] > 0 && (
+              <li
+                key={index}
+                className={`flex-grow flex flex-col items-center p-6 ${isBlock(
+                  listWallet[index].properties.title,
+                  "bg-red-500",
+                  "bg-white hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                )} border border-gray-200 rounded-lg shadow`}
+              >
+                <h5
+                  className={`mb-2 text-2xl font-bold tracking-tight ${isBlock(
+                    listWallet[index].properties.title,
+                    "text-white dark:text-gray-900",
+                    "text-gray-900 dark:text-white"
+                  )}`}
+                >
+                  {listWallet[index].properties.title}
+                </h5>
+                <p
+                  className={`font-normal ${isBlock(
+                    listWallet[index].properties.title,
+                    "text-white dark:text-gray-900",
+                    "text-gray-700 dark:text-gray-400"
+                  )}`}
+                >
+                  {format(total[5])}
+                </p>
+              </li>
+            )
+        )}
       </ul>
     </div>
   );

@@ -19,9 +19,10 @@ export async function MutateWallet({ wallet, kredit, debit, keterangan }) {
   const timestamp = moment().format("YYYY/MM/DD HH:mm:ss");
   const lastTotal = await GetLastTotal(wallet.title);
   const total =
-    (lastTotal ? parseInt(lastTotal[5]) : 0) +
+    (parseInt(lastTotal[5] || 0) || 0) +
     (parseInt(kredit) || 0) -
     (parseInt(debit) || 0);
+  console.log(total);
   const response = await gapi.client.sheets.spreadsheets.values.append({
     spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
     range: wallet.title,
@@ -36,7 +37,7 @@ export async function MutateWallet({ wallet, kredit, debit, keterangan }) {
 export async function TransferBalance({ from, to, nominal, admin }) {
   const fromLastTotal = await GetLastTotal(from.title);
   const fromTotal =
-    (fromLastTotal ? parseInt(fromLastTotal[5]) : 0) -
+    (parseInt(fromLastTotal[5]) || 0) -
     parseInt(nominal) -
     (parseInt(admin) || 0);
   const fromResponse = await gapi.client.sheets.spreadsheets.values.append({
@@ -59,7 +60,7 @@ export async function TransferBalance({ from, to, nominal, admin }) {
 
   const toLastTotal = await GetLastTotal(to.title);
   const toTotal =
-    (toLastTotal ? parseInt(toLastTotal[5]) : 0) + parseInt(nominal);
+    (parseInt(toLastTotal[5]) || 0) + parseInt(nominal);
   const toResponse = await gapi.client.sheets.spreadsheets.values.append({
     spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
     range: to.title,
@@ -89,4 +90,32 @@ export async function GetLastTotal(title) {
   const values = response.result.values;
   if (!values) return 0;
   return values[values.length - 1];
+}
+
+export async function CreateSheet(title) {
+  const response = await gapi.client.sheets.spreadsheets.batchUpdate({
+    spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
+    requests: [
+      {
+        addSheet: {
+          properties: {
+            title,
+            sheetType: "GRID",
+          },
+        },
+      },
+    ],
+  });
+  const headers = ["ID", "timestamp", "kredit", "debit", "note", "total"];
+  const range = `${title}!A1:${String.fromCharCode(65 + headers.length - 1)}1`;
+
+  await gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
+    range: range,
+    valueInputOption: "RAW",
+    resource: {
+      values: [headers],
+    },
+  });
+  return response;
 }

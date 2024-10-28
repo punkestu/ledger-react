@@ -1,4 +1,25 @@
-export default function Success({ show: [showProp, setShowProp] }) {
+import { useEffect, useState } from "react";
+import { subscribe } from "../lib/Queue";
+
+export default function Success() {
+  const [showProp, setShowProp] = useState(false);
+  const [msg, setMsg] = useState(null);
+  subscribe((event, params) => {
+    if (event === "success") {
+      setShowProp(true);
+      if (params && params.msg === "wallet created") {
+        setMsg(
+          params.wallet.result.replies[0].addSheet.properties.title +
+            " berhasil dibuat"
+        );
+      }
+    }
+  });
+  useEffect(() => {
+    if (!showProp) {
+      setMsg(null);
+    }
+  }, [showProp]);
   return (
     <div
       id="default-modal"
@@ -22,7 +43,7 @@ export default function Success({ show: [showProp, setShowProp] }) {
             >
               <svg
                 className="w-3 h-3"
-               aria-hidden="true"
+                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 14 14"
@@ -40,7 +61,7 @@ export default function Success({ show: [showProp, setShowProp] }) {
           </div>
           <div className="p-4 md:p-5 space-y-4">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              Transaksi berhasil dilakukan
+              {msg || "Transaksi berhasil dilakukan"}
             </p>
           </div>
           <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

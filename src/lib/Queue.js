@@ -1,9 +1,7 @@
-var queue = [];
 var subscribers = [];
 
-export function pushEvent(event) {
-  queue.push(event);
-  subscribers.forEach((callback) => callback(event));
+export function pushEvent(event, params) {
+  subscribers.forEach((callback) => callback(event, params));
 }
 
 export function subscribe(callback) {

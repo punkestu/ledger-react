@@ -7,6 +7,9 @@ import Mutate from "./components/Mutate";
 import Transfer from "./components/Transfer";
 import Header from "./components/Header";
 import Total from "./components/Total";
+import { CreateWallet } from "./components/CreateWallet";
+import Success from "./components/Success";
+import { subscribe } from "./lib/Queue";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -32,6 +35,12 @@ const App = () => {
 
   async function start() {}
 
+  subscribe((event) => {
+    if (event === "wallet-created") {
+      runner();
+    }
+  });
+
   return (
     <>
       <Header isSignedIn={isSignedIn} />
@@ -39,10 +48,12 @@ const App = () => {
       <main className="px-4 py-2 grid md:grid-cols-2 gap-4">
         {isSignedIn ? (
           <>
+            <Success />
             <LoadingScreen loaded={isSheetReady && isAppReady} />
             <Mutate listWallet={listWallet} />
             <Transfer listWallet={listWallet} />
             <Total listWallet={listWallet} />
+            <CreateWallet />
           </>
         ) : (
           <p className="col-span-2 text-center">Login dulu</p>
