@@ -4,6 +4,9 @@ import { pushEvent, subscribe } from "../lib/Queue";
 
 export default function Total({ listWallet }) {
   const [totals, setTotals] = useState([]);
+  const [free, setFree] = useState(0);
+  const [blocked, setBlocked] = useState(0);
+
   const [isRefreshing, setIsRefreshing] = useState(false);
   useEffect(() => {
     if (listWallet.length) {
@@ -22,6 +25,22 @@ export default function Total({ listWallet }) {
     GetAllLastTotal()
       .then((totals) => {
         setTotals(totals);
+        setFree(
+          totals.reduce(
+            (acc, total) =>
+              acc +
+              isBlock(total.wallet.properties.title, 0, parseInt(total.values[5]) || 0),
+            0
+          )
+        );
+        setBlocked(
+          totals.reduce(
+            (acc, total) =>
+              acc +
+              isBlock(total.wallet.properties.title, parseInt(total.values[5]) || 0, 0),
+            0
+          )
+        );
       })
       .catch(() => {
         pushEvent("error");
@@ -91,8 +110,19 @@ export default function Total({ listWallet }) {
       <p className="text-xl">
         <strong>Total: </strong>
         {format(
-          totals.reduce((acc, total) => acc + (parseInt(total.values[5] || 0) || 0), 0)
+          totals.reduce(
+            (acc, total) => acc + (parseInt(total.values[5] || 0) || 0),
+            0
+          )
         )}
+      </p>
+      <p className="text-xl">
+        <strong>- Free: </strong>
+        {format(free)}
+      </p>
+      <p className="text-xl">
+        <strong>- Blocked: </strong>
+        {format(blocked)}
       </p>
       <ul className="flex flex-wrap gap-2 overflow-x-auto max-h-[50vh]">
         {totals.map(
